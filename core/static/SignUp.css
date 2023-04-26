@@ -1,80 +1,57 @@
-.register-page {
+body::after {
+    content: "";
+    background: url(../static/bg.jpg);
+    opacity: 0.4;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;   
+}
+
+
+.SignUp-Page {
     width: 600px;
-    padding: 5% 0 0;
+    padding: 3% 0 0;
     margin: auto;
-}
-  
-.form {
-position: relative;
-z-index: 1;
-background: #FFFFFF;
-max-width: 360px;
-margin: 0 auto 100px;
-padding: 45px;
-text-align: center;
-box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  }
+form {
+    width: auto;
+    margin: auto;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+
+    
+ 
 }
 
-.register-title {
-font-family: "Changa", sans-serif;
-font-weight: bold;
-margin-top: 0px;
-margin-bottom: 24px;
-color: #6C2A6A;
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
-.form input {
-font-family: "Roboto", sans-serif;
-outline: 0;
-background: #f2f2f2;
-width: 100%;
-border: 0;
-margin: 0 0 15px;
-padding: 15px;
-box-sizing: border-box;
-font-size: 14px;
-}
-.form button {
-font-family: "Roboto", sans-serif;
-text-transform: uppercase;
-outline: 0;
-background: #102a43;
-width: 100%;
-border: 0;
-padding: 15px;
-color: #FFFFFF;
-font-size: 14px;
--webkit-transition: all 0.3 ease;
-transition: all 0.3 ease;
-cursor: pointer;
-margin-top: 10px;
-}
-.form button:hover,.form button:active,.form button:focus {
-background: #2f5579;
-}
-.form .message {
-margin: 15px 0 0;
-color: #b3b3b3;
-font-size: 12px;
-}
-.form .message a {
-color: #102a43;
-
-}
-
-body {
-background: #102a43;
-font-family: "Roboto", sans-serif;
-
-}
-
-.role{
-    font-family: "Roboto", sans-serif;
-    background: #f2f2f2;
-    color: #495057;
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
     width: 100%;
-    border: 0;
-    margin: 0 0 15px;
-    padding: 15px;
-    font-size: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #fff;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+

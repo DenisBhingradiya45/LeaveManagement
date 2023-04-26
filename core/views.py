@@ -4,37 +4,46 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate
 from .models import *
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
+from django.urls import reverse_lazy
+
 # Create your views here.
 
 def SignUp(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
-            form = CustomUserCreationForm(request.POST)
-            if form.is_valid():
-                form.save()
+            fm = CustomUserCreationForm(request.POST)
+            if fm.is_valid():
+                messages.success(request, 'Account Created Successfully !!')
+                fm.save()
                 return redirect('/DashBoard/')
-            # else:
-            #     return HttpResponse({'messages':'asdffffffff'})
         else:
-            form = CustomUserCreationForm()
-        return render(request, 'SignUp.html', {'form': form})
+            fm = CustomUserCreationForm()
+        return render(request, 'SignUp.html', {'form': fm})
     else:
         return redirect('/DashBoard/')
+
 
 def SignIn(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
-            form = AuthenticationForm(request, request.POST)
-            if form.is_valid():
-                user = form.get_user()
-                login(request, user)
-                return redirect('/DashBoard/')
+            fm = AuthenticationForm(request=request, data = request.POST)
+            if fm.is_valid():
+                uemail = fm.cleaned_data['username']
+                upass = fm.cleaned_data['password']
+                user = authenticate(email = uemail, password = upass)
+                if user is not None:
+                    login(request, user)
+                    return HttpResponseRedirect('/DashBoard/')
+                else:
+                    messages.info(request, 'Try again! username or password is incorrect')
         else:
-            form = AuthenticationForm()
-        return render(request, 'SignIn.html', {'form': form})
+            fm = AuthenticationForm()
+        return render(request, "SignIn.html", {"form":fm})
     else:
-        return redirect('/DashBoard/')
+        return HttpResponseRedirect('/DashBoard/')
 
 
 def RequestLeave(request):
@@ -67,3 +76,14 @@ def DashBoard(request):
     # form = user.objects.all()
     # print(form,"=================")
     return render(request, 'DashBoard.html')
+
+
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'password_reset.html'
+    email_template_name = 'password_reset_email.html'
+    subject_template_name = 'password_reset_subject.txt'
+    success_url = reverse_lazy('password_reset_done')
+    
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'password_reset_done.html'
