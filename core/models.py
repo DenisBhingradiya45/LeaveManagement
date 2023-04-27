@@ -56,3 +56,8 @@ class Application(models.Model):
     start_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     end_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     ceated_at = models.DateTimeField(auto_now_add=True)
+
+class ForgotPassword(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    otp = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)

@@ -1,13 +1,17 @@
-from django.shortcuts import render
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, authenticate
+from .forms import *
 from .models import *
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
-from django.urls import reverse_lazy
+import random
+from django.conf import settings
+from django.core.mail import send_mail
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
+from django.core.cache import cache
 
 # Create your views here.
 
@@ -45,14 +49,18 @@ def SignIn(request):
     else:
         return HttpResponseRedirect('/DashBoard/')
 
+def LogOut(request):
+    logout(request)
+    return HttpResponseRedirect('/SignIn/')
 
 def RequestLeave(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             title = request.POST['title']
             description = request.POST['reason']
-            start_date = request.POST['start_date']
-            end_date = request.POST['end_date']
+            start_date = request.POST['start-date']
+            end_date = request.POST['end-date']
+            work_mode = request.POST['work-mode']
             user = request.user
             leave = Application.objects.create(
                 user=user,
@@ -60,30 +68,90 @@ def RequestLeave(request):
                 description=description,
                 start_date=start_date,
                 end_date=end_date,
+                work_mode = work_mode
             )
             return redirect('/DashBoard/')
         return render(request, 'RequestLeave.html')
     else:
         return redirect('/SignIn/')
     
-def view_leaves(request):
-    student = request.user.student
-    leaves = Application.objects.filter(user=student)
-    return render(request, '', {'leaves': leaves})
-
 def DashBoard(request):
-    # user = request.user
-    # form = user.objects.all()
-    # print(form,"=================")
-    return render(request, 'DashBoard.html')
+    if request.user.is_authenticated:
+    #     fm = Application.objects.get(user=request.user)
+        return render(request, 'DashBoard.html')
+    else:
+        return redirect('/SignIn/')
 
 
+def forgot_password(request):
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            try:
+                user = User.objects.get(email=email)
+                otp = random.randint(100000, 999999)
+                forgot_password = ForgotPassword.objects.create(user=user, otp=otp)
+                forgot_password.save()
+                subject = 'Your OTP for password reset'
+                message = f'Your OTP is {otp}. Please use this to reset your password.'
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [email, ]
+                send_mail(subject, message, email_from, recipient_list)
+                return redirect('otp_verification', email=email)
+            except User.DoesNotExist:
+                invalid_email = True
+                invalid_form = True
+        else:
+            messages.error(request, 'Invalid form data.')
+    else:
+        form = ForgotPasswordForm()
+        invalid_email = False
+        invalid_form = False
 
-class CustomPasswordResetView(PasswordResetView):
-    template_name = 'password_reset.html'
-    email_template_name = 'password_reset_email.html'
-    subject_template_name = 'password_reset_subject.txt'
-    success_url = reverse_lazy('password_reset_done')
-    
-class CustomPasswordResetDoneView(PasswordResetDoneView):
-    template_name = 'password_reset_done.html'
+    context = {'form': form, 'invalid_form': invalid_form, 'invalid_email': invalid_email}
+    return render(request, 'forgot_password.html', context)
+
+def otp_verification(request, email):
+    try:
+        forgot_password = ForgotPassword.objects.filter(user__email=email).latest('timestamp')
+        if request.method == 'POST':
+            form = OTPVerificationForm(request.POST)
+            if form.is_valid():
+                otp = form.cleaned_data['otp']
+                if otp == forgot_password.otp:
+                    return redirect('reset_password', email=email)
+                else:
+                    form.add_error('otp', 'Incorrect OTP. Please try again.')
+        else:
+            form = OTPVerificationForm(initial={'email': email})
+        context = {'form': form}
+        return render(request, 'otp_verification.html', context)
+    except ForgotPassword.DoesNotExist:
+        return redirect('forgot_password')
+
+def reset_password(request, email):
+    try:
+        forgot_password = ForgotPassword.objects.filter(user__email=email).latest('timestamp')
+        if request.method == 'POST':
+            form = ResetPasswordForm(request.POST)
+            if form.is_valid():
+                password = form.cleaned_data['password']
+                confirm_password = form.cleaned_data['confirm_password']
+                if password == confirm_password:
+                    user = forgot_password.user
+                    user.set_password(password)
+                    user.save()
+                    forgot_password.delete()
+                    messages.success(request, 'Your password has been reset successfully. Please sign in with your new password.')
+                    return redirect('SignIn')
+                else:
+                    messages.error(request, 'Password and confirm password do not match.')
+            else:
+                messages.error(request, 'Please fill in all the fields correctly.')
+        else:
+            form = ResetPasswordForm(initial={'email': email})
+        context = {'form': form}
+        return render(request, 'reset_password.html', context)
+    except ForgotPassword.DoesNotExist:
+        return redirect('forgot_password')

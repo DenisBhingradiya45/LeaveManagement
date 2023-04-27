@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'core.middleware.CustomAuthenticationMiddleware'
 ]
 
 ROOT_URLCONF = 'leave_management.urls'
@@ -142,5 +142,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'denishbhingradiya@gmail.com'
-EMAIL_HOST_PASSWORD = 'Denish@#4554'
-DEFAULT_FROM_EMAIL = 'denishbhingradiya@gmail.com'
+EMAIL_HOST_PASSWORD = 'maivrgctvxxeecte'
+# DEFAULT_FROM_EMAIL = 'denishbhingradiya@gmail.com'
+
+FORGOT_PASSWORD_MAX_ATTEMPTS = 3
+FORGOT_PASSWORD_TIMEOUT = 60*5

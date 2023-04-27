@@ -16,3 +16,17 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField()
+
+class OTPVerificationForm(forms.Form):
+    email = forms.EmailField(widget=forms.HiddenInput())
+    otp = forms.IntegerField()
+
+class ResetPasswordForm(forms.Form):
+    email = forms.EmailField(widget=forms.HiddenInput())
+    password = forms.CharField(widget=forms.PasswordInput())
+    confirm_password = forms.CharField(widget=forms.PasswordInput())

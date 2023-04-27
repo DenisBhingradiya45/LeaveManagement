@@ -7,13 +7,12 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('SignUp/', SignUp, name='SignUp'),
     path('SignIn/', SignIn, name='SignIn'),
+    path('LogOut/', LogOut, name='LogOut'),
     path('RequestLeave/', RequestLeave, name='RequestLeave'),
     path('DashBoard/', DashBoard, name='DashBoard'),
-    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('password_reset/done/' ,auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
-    path('reset /<uidb64>/<token>/' ,auth_views .PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
-    path('reset/done/' ,auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
-    
+    path('forgot_password/', forgot_password, name='forgot_password'),
+    path('otp_verification/<str:email>/', otp_verification, name='otp_verification'),
+    path('reset_password/<str:email>/', reset_password, name='reset_password'),
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

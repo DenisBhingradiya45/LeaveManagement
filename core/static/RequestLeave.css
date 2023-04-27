@@ -1,4 +1,5 @@
-* {
+/* * {
+
     box-sizing: border-box;
     font-family: Arial, sans-serif;
   }
@@ -44,6 +45,58 @@
   }
   
   input[type="submit"]:hover {
+    background-color: #3e8e41;
+  }
+   */
+
+   .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+  }
+   body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .leave-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+  
+  .leave-form h2 {
+    margin-bottom: 20px;
+  }
+  
+  .leave-form label {
+    display: block;
+    margin-top: 20px;
+  }
+  
+  .leave-form input[type="text"],
+  .leave-form textarea,
+  .leave-form select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    box-sizing: border-box;
+  }
+  
+  .leave-form button[type="submit"] {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  
+  .leave-form button[type="submit"]:hover {
     background-color: #3e8e41;
   }
   
