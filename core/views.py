@@ -1,17 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
 from .models import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 import random
 from django.conf import settings
 from django.core.mail import send_mail
-from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
-from django.contrib.auth import get_user_model
-from django.core.cache import cache
+
 
 # Create your views here.
 
@@ -74,14 +71,17 @@ def RequestLeave(request):
         return render(request, 'RequestLeave.html')
     else:
         return redirect('/SignIn/')
-    
+
+
 def DashBoard(request):
     if request.user.is_authenticated:
-    #     fm = Application.objects.get(user=request.user)
-        return render(request, 'DashBoard.html')
+        leave_requests = Application.objects.filter(user=request.user)
+        pending_leaves = Application.objects.filter()
+        context = {'leave_requests': leave_requests, 'pending_leaves': pending_leaves}
+        return render(request, 'DashBoard.html', context)
     else:
         return redirect('/SignIn/')
-
+    
 
 def forgot_password(request):
     if request.method == 'POST':

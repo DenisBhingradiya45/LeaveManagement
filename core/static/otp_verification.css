@@ -52,3 +52,10 @@
   .errorlist {
     color: #b61424;
   }
+
+
+#id_otp::-webkit-inner-spin-button,
+#id_otp::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

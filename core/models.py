@@ -1,16 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
-ROLE_CHOICES = (
-    ("Student", "Student"),
-    ("Faculty", "Faculty"),
-)
-
-WORK_CHOICES = (
-    ("Online", "Online"),
-    ("On-Campus", "On-Campus"),
-)
-
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -29,6 +19,10 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    ROLE_CHOICES = (
+        ("Student", "Student"),
+        ("Faculty", "Faculty"),
+    )
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -47,15 +41,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Application(models.Model):
+    WORK_CHOICES = (
+        ("Online", "Online"),
+        ("On-Campus", "On-Campus"),
+    )
+    STATUS_CHOICES = (
+        ("Approved ", "Approved"),
+        ("Denied", "Denied"),
+        ("Pending", "Pending"),
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     description = models.TextField()
     work_mode = models.CharField(max_length=50, choices=WORK_CHOICES)
-    status = models.CharField(max_length=12, default='pending')
+    status = models.CharField(
+        max_length=12, default='Pending', choices=STATUS_CHOICES)
     is_approved = models.BooleanField(default=False)
     start_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     end_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     ceated_at = models.DateTimeField(auto_now_add=True)
+
 
 class ForgotPassword(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

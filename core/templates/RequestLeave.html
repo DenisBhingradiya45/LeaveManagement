@@ -52,29 +52,37 @@
 
 <body>
     <div class="container">
-    {% if request.user.is_authenticated %}
-    <form method="POST" class="leave-form">
-        {% csrf_token %}
-        <h2>Request Leave</h2>
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" required>
-        <label for="reason">Reason:</label>
-        <textarea id="reason" name="reason" required></textarea>
-        <label for="start-date">Start Date:</label>
-        <input type="date" id="start-date" name="start-date" required>
-        <label for="end-date">End Date:</label>
-        <input type="date" id="end-date" name="end-date" required>
-        <label for="work-mode">Work Mode:</label>
-        <select id="work-mode" name="work-mode" required>
-            <option value="On-Campus">In Office</option>
-            <option value="Online">Online</option>
-        </select>
-        <button type="submit">Submit</button>
-    </form>
-    {% else %}
-    <p>You need to sign in first.</p>
-    {% endif %}
-</div>
+        {% if request.user.is_authenticated %}
+        <form method="POST" class="leave-form">
+            {% csrf_token %}
+            <h2>Request Leave</h2>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            <label for="reason">Reason:</label>
+            <textarea id="reason" name="reason" required></textarea>
+            <label for="start-date">Start Date:</label>
+            <input type="date" id="start-date" name="start-date" required >
+            <label for="end-date">End Date:</label>
+            <input type="date" id="end-date" name="end-date" required >
+            <label for="work-mode">Work Mode:</label>
+            <select id="work-mode" name="work-mode" required>
+                <option value="On-Campus">In Office</option>
+                <option value="Online">Online</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+        {% else %}
+        <p>You need to sign in first.</p>
+        {% endif %}
+    </div>
+    <script>
+        // Get the current date in YYYY-MM-DD format
+        var today = new Date().toISOString().split('T')[0];
+
+        // Set the minimum date to today for the start date input field
+        document.getElementById("start-date").setAttribute("min", today);
+        document.getElementById("end-date").setAttribute("min", today);
+    </script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>

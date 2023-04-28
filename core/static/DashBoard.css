@@ -14,3 +14,72 @@
     background-color: #3e8e41;
   }
   
+
+  /*----------------------- Student DashBoard -----------------------*/
+.student-dashboard {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.leave-requests {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.leave-requests th {
+  background-color: #ddd;
+  font-weight: bold;
+  text-align: left;
+  padding: 10px;
+}
+
+.leave-requests td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.status-approved {
+  color: green;
+}
+
+.status-pending {
+  color: orange;
+}
+
+.status-denied{
+  color: #b61424;
+}
+
+  /*----------------------- Faculty DashBoard -----------------------*/
+
+.faculty-dashboard {
+  margin: 20px;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.a-d {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.a-d th {
+  background-color: #ddd;
+  font-weight: bold;
+  text-align: left;
+  padding: 10px;
+}
+
+.a-d td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
