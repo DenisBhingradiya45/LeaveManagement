@@ -42,15 +42,15 @@
   border-bottom: 1px solid #ddd;
 }
 
-.status-approved {
+.status-Approved {
   color: green;
 }
 
-.status-pending {
+.status-Pending {
   color: orange;
 }
 
-.status-denied{
+.status-Denied{
   color: #b61424;
 }
 

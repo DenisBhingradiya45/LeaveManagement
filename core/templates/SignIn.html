@@ -14,29 +14,30 @@
 </head>
 
 <body>
-    <!-- <form method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-</form> -->
-
 
     <div class="SignIn-Page">
         <form class="" method="POST" action="" novalidate>
             <h3>LOGIN</h3>
             {% csrf_token %}
             {% for fm in form %}
-            <div class="form-group">
-                {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
-            </div>
+                <div class="form-group">
+                    {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
+                </div>
             {% endfor %}
+
             {% if form.non_field_errors %}
-            {% for error in form.non_field_errors %}
-            <p class="text-danger">{{error}}</p>
-            {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <p class="text-danger">{{error}}</p>
+                {% endfor %}
             {% endif %}
+
             <input type="submit" value="Submit" class="btn btn-primary">
-            <p class="message">Don't have an account? <a href="{% url 'SignUp' %}">Register</a></p>
-            <p>Forgot your password? <a href="{% url 'forgot_password' %}">Reset it here</a>.</p>
+            <p class="message">
+                Don't have an account? <a href="{% url 'SignUp' %}">Register</a>
+            </p>
+            <p>
+                Forgot your password? <a href="{% url 'forgot_password' %}">Reset it here</a>.
+            </p>
         </form>
     </div>
 

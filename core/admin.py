@@ -9,4 +9,4 @@ class ModelAdmin(admin.ModelAdmin):
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'description', 'work_mode', 'is_approved', 'start_date', 'end_date']
+    list_display = ['id', 'title', 'description', 'work_mode', 'start_date', 'end_date', 'status']

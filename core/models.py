@@ -54,12 +54,14 @@ class Application(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()
     work_mode = models.CharField(max_length=50, choices=WORK_CHOICES)
-    status = models.CharField(
-        max_length=12, default='Pending', choices=STATUS_CHOICES)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=9, default='Pending')
     is_approved = models.BooleanField(default=False)
     start_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     end_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     ceated_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-ceated_at']
 
 
 class ForgotPassword(models.Model):

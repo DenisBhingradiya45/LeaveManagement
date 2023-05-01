@@ -1,13 +1,15 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from .forms import *
 from .models import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.contrib import messages
 import random
 from django.conf import settings
 from django.core.mail import send_mail
+from django.contrib.auth.password_validation import validate_password
+from django.urls import reverse
 
 
 # Create your views here.
@@ -18,14 +20,14 @@ def SignUp(request):
             fm = CustomUserCreationForm(request.POST)
             if fm.is_valid():
                 messages.success(request, 'Account Created Successfully !!')
-                fm.save()
+                user = fm.save()
+                login(request, user)
                 return redirect('/DashBoard/')
         else:
             fm = CustomUserCreationForm()
         return render(request, 'SignUp.html', {'form': fm})
     else:
         return redirect('/DashBoard/')
-
 
 def SignIn(request):
     if not request.user.is_authenticated:
@@ -72,17 +74,27 @@ def RequestLeave(request):
     else:
         return redirect('/SignIn/')
 
-
 def DashBoard(request):
     if request.user.is_authenticated:
         leave_requests = Application.objects.filter(user=request.user)
-        pending_leaves = Application.objects.filter()
-        context = {'leave_requests': leave_requests, 'pending_leaves': pending_leaves}
+        leaves = Application.objects.filter()
+        context = {'leave_requests': leave_requests, 'leaves': leaves}
         return render(request, 'DashBoard.html', context)
     else:
         return redirect('/SignIn/')
-    
 
+def approve_leave_request(request, id):
+    leave = Application.objects.get(id=id)
+    leave.status = 'Approved'
+    leave.save()
+    return HttpResponseRedirect(reverse("DashBoard"))
+
+def deny_leave_request(request, id):
+    leave = Application.objects.get(id=id)
+    leave.status = 'Denied'
+    leave.save()
+    return HttpResponseRedirect(reverse('DashBoard'))
+ 
 def forgot_password(request):
     if request.method == 'POST':
         form = ForgotPasswordForm(request.POST)
@@ -139,11 +151,16 @@ def reset_password(request, email):
                 password = form.cleaned_data['password']
                 confirm_password = form.cleaned_data['confirm_password']
                 if password == confirm_password:
+                    # Validate the password
+                    try:
+                        validate_password(password)
+                    except forms.ValidationError as error:
+                        messages.error(request, error)
+                        return render(request, 'reset_password.html', {'form': form})
                     user = forgot_password.user
                     user.set_password(password)
                     user.save()
                     forgot_password.delete()
-                    messages.success(request, 'Your password has been reset successfully. Please sign in with your new password.')
                     return redirect('SignIn')
                 else:
                     messages.error(request, 'Password and confirm password do not match.')

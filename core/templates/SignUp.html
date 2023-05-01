@@ -15,23 +15,25 @@
 
 <body>
     <div class="container">
-
         <div class="SignUp-Page">
-
             <form action="" method="post" novalidate id="signup">
                 <h3 class="justify-content-center"> SignUp</h3>
                 {% csrf_token %}
                 {% for fm in form %}
-                <div class="form-group">
-                    {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
-                </div>
+                    <div class="form-group">
+                        {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small>
+                    </div>
                 {% endfor %}
                 <input type="submit" value="Submit" class="btn btn-primary">
-                <p class="message">Already registered? <a href="{% url 'SignIn' %}">Log In</a></p>
+                <p class="message">
+                    Already registered? <a href="{% url 'SignIn' %}">Log In</a>
+                </p>
                 {% if form.non_field_errors %}
-                {% for error in form.non_field_errors %}
-                <p class="text-danger my-3">{{error}}</p>
-                {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p class="text-danger my-3">
+                            {{error}}
+                        </p>
+                    {% endfor %}
                 {% endif %}
             </form>
         </div>

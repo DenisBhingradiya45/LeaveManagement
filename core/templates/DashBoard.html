@@ -15,22 +15,26 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <!-- <a class="navbar-brand" href="#">Dashboard</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button> -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#"> <img src="../static/chimney-home-icon-transparent-1-removebg.png"
-                            alt="Home" height="20px"> Home</a>
+                    <a class="nav-link" href="#"> <img src="../static/chimney-home-icon-transparent-1-removebg.png"alt="Home" height="20px"> 
+                        Home
+                    </a>
                 </li>
             </ul>
+
+            <div class="mx-auto">
+                <strong class="" style="margin-right: 400px;">
+                    Welcome {{ request.user.first_name }}
+                </strong>
+            </div>
+
             <div class="navbar-nav">
                 {% if request.user.is_authenticated %}
-                <a class="nav-item nav-link" href="{% url 'LogOut' %}">Logout</a>
+                    <a class="nav-item nav-link" href="{% url 'LogOut' %}">Logout</a>
                 {% else %}
-                <a class="nav-item nav-link" href="{% url 'SignIn' %}">login</a>
+                    <a class="nav-item nav-link" href="{% url 'SignIn' %}">login</a>
                 {% endif %}
             </div>
         </div>
@@ -59,7 +63,7 @@
                                     <td>{{ request.title }}</td>
                                     <td>{{ request.description }}</td>
                                     <td>{{ request.work_mode }}</td>
-                                    <td class="{% if request.status == 'approved' %}status-approved{% elif request.status == 'pending' %}status-pending{% else %}status-denied{% endif %}">
+                                    <td class="{% if request.status == 'Approved' %}status-Approved{% elif request.status == 'Pending' %}status-Pending{% else %}status-Denied{% endif %}">
                                         {{ request.status }}
                                     </td>
                                     <td>{{ request.start_date.date }}</td>
@@ -82,14 +86,17 @@
 
 
     {% elif request.user.role == "Faculty" %}
+        {% csrf_token %}
         <div class="faculty-dashboard">
             <h1>Faculty Dashboard</h1>
-            {% if pending_leaves %}
+            {% if leaves %}
                 <table class="a-d">
                     <thead>
                         <tr>
                             <th>Title</th>
                             <th>Description</th>
+                            <th>First Name</th>
+                            <th>Role</th>
                             <th>Work Mode</th>
                             <th>Start Date</th>
                             <th>End Date</th>
@@ -97,21 +104,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for leave in pending_leaves %}
+                        {% for leave in leaves %}
                             <tr>
                                 <td>{{ leave.title }}</td>
                                 <td>{{ leave.description }}</td>
+                                <td>{{ leave.user.first_name }}</td>
+                                <td>{{ leave.user.role }}</td>
                                 <td>{{ leave.work_mode }}</td>
                                 <td>{{ leave.start_date.date }}</td>
                                 <td>{{ leave.end_date.date }}</td>
                                 <td>
-                                    {% if leave.status == "denied" %}
+                                    {% if leave.status == "Denied" %}
                                         <p style="color: #b61424;">Denied</p>
-                                    {% elif leave.status == "approved" %}
+                                    {% elif leave.status == "Approved" %}
                                         <p style="color: #4CAF50;">Approved</p>
                                     {% else %}
-                                        <button type="button" class="btn btn-success" id="approve-btn" data-leave-id="{{ leave.id }}">Approve</button>
-                                        <button type="button" class="btn btn-danger" id="deny-btn" data-leave-id="{{ leave.id }}">Deny</button>                                
+                                    <div id="leave-{{leave.id}}">
+                                        <button class="approve-btn" onclick="approveLeave(this, {{ leave.id }})">Approve</button>                      
+                                        <button class="denied-btn" onclick="denyLeave(this, {{ leave.id }})">Denied</button>                   
+                                    </div>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -124,27 +135,39 @@
         </div>
 
     {% endif %}
-
     <script>
-        $(document).ready(function() {
-        $('#approve-btn').click(function() {
+        function approveLeave(button, leaveId) {
+            var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
             $.ajax({
-            type: 'POST',
-            url: 'update_approval.php',
-            data: { approval_status: 'approved' },
-            success: function(response) {
-                $('#approve-btn').text('Approved');
+                url: '/approve_leave_request/' + leaveId + '/',
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                success: function(response) {
+                    $('#leave-' + leaveId).replaceWith('<p style="color: green;">Approved</p>');    
                 }
             });
-        });
-    });
-
+        }
+    
+        function denyLeave(button, leaveId) {
+            var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+            $.ajax({
+                url: '/deny_leave_request/' + leaveId + '/',
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                success: function(response) {
+                    $('#leave-' + leaveId).replaceWith('<p style="color: #b61424;">Denied</p>');;
+                }
+            });
+        }
     </script>
     
     
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>

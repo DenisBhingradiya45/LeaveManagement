@@ -1,106 +1,54 @@
-/* * {
-
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-  }
-  
   .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-  }
-  
-  h1 {
-    text-align: center;
-    margin-top: 0;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  label {
-    margin-bottom: 5px;
-  }
-  
-  input[type="text"],
-  input[type="email"],
-  input[type="date"],
-  textarea {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-  }
-  
-  input[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  input[type="submit"]:hover {
-    background-color: #3e8e41;
-  }
-   */
+  width: 80%;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
 
-   .container {
-    width: 80%;
-    max-width: 500px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-   body {
-    font-family: Arial, sans-serif;
-  }
-  
-  .leave-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 50px;
-  }
-  
-  .leave-form h2 {
-    margin-bottom: 20px;
-  }
-  
-  .leave-form label {
-    display: block;
-    margin-top: 20px;
-  }
-  
-  .leave-form input[type="text"],
-  .leave-form textarea,
-  .leave-form select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-top: 5px;
-    box-sizing: border-box;
-  }
-  
-  .leave-form button[type="submit"] {
-    background-color: #4CAF50;
-    color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    margin-top: 20px;
-    cursor: pointer;
-  }
-  
-  .leave-form button[type="submit"]:hover {
-    background-color: #3e8e41;
-  }
-  
+  body {
+  font-family: Arial, sans-serif;
+}
+
+.leave-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.leave-form h2 {
+  margin-bottom: 20px;
+}
+
+.leave-form label {
+  display: block;
+  margin-top: 20px;
+}
+
+.leave-form input[type="text"],
+.leave-form textarea,
+.leave-form select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
+.leave-form button[type="submit"] {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.leave-form button[type="submit"]:hover {
+  background-color: #3e8e41;
+}
